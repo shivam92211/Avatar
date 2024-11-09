@@ -8,14 +8,21 @@ from nltk.sentiment import SentimentIntensityAnalyzer
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.text_rank import TextRankSummarizer
-from spacy.cli import download
- 
-
-# Download the model
-download('en_core_web_sm')
+import os
+from pathlib import Path
 
 # Load spaCy model
-nlp = spacy.load('en_core_web_sm')
+def load_spacy_model():
+    # Check if the model is installed
+    try:
+        nlp = spacy.load('en_core_web_sm')
+    except OSError:
+        # If the model is not installed, download and install it
+        spacy.cli.download('en_core_web_sm')
+        nlp = spacy.load('en_core_web_sm')
+    return nlp
+
+nlp = load_spacy_model()
 
 # Functions for File Text Extraction
 def extract_pdf_text(file_path):
