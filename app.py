@@ -1,5 +1,3 @@
-import subprocess
-import sys
 import streamlit as st
 import PyPDF2
 import docx
@@ -11,19 +9,8 @@ from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.text_rank import TextRankSummarizer
 
-# Function to load spaCy model
-def load_spacy_model():
-    try:
-        nlp = spacy.load("en_core_web_sm")
-    except OSError:
-        # Download model if not present
-        print("Downloading en_core_web_sm model for spaCy...")
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl"])
-        nlp = spacy.load("en_core_web_sm")
-    return nlp
-
-# Initialize spaCy model
-nlp = load_spacy_model()
+# Load spaCy model
+nlp = spacy.load("en_core_web_sm")
 
 # Define additional functions for text extraction, NER, sentiment analysis, etc.
 def extract_pdf_text(file_path):
@@ -70,8 +57,6 @@ def perform_ner(text):
             entities['organizations'].add(ent.text)
     return entities
 
-# Sentence Simplification, Summarization, Theme Extraction, Sentiment Analysis functions remain unchanged
-
 # Streamlit App Layout
 st.title("Text Analysis Tool")
 
@@ -95,8 +80,6 @@ if uploaded_file is not None:
             st.write("Locations:", entities['locations'])
             st.write("Dates:", entities['dates'])
             st.write("Organizations:", entities['organizations'])
-
-        # Simplify Sentences, Summarize Text, Extract Themes, Sentiment Analysis remain unchanged
     else:
         st.error("Error extracting text. Please upload a valid PDF or DOCX file.")
 else:
